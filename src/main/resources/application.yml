@@ -1,0 +1,29 @@
+server:
+  port: 8076
+  ssl:
+    enabled: false
+  http2:
+    enabled: true
+
+eureka:
+  client:
+    enabled: true
+    serviceUrl.defaultZone: http://localhost:8075/eureka
+  instance:
+    hostname: localhost
+    securePortEnabled: false
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: details
+          uri: http://localhost:8077/
+          predicates:
+            - Path=/setup/**
+        - id: list
+          uri: http://localhost:8078/
+          predicates:
+            - Path=/setup/**
