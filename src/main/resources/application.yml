@@ -1,29 +1,33 @@
 server:
   port: 8076
-  ssl:
-    enabled: false
-  http2:
-    enabled: true
-
 eureka:
   client:
-    enabled: true
-    serviceUrl.defaultZone: http://localhost:8075/eureka
-  instance:
-    hostname: localhost
-    securePortEnabled: false
+    serviceUrl:
+      defaultZone: http://localhost:8075/eureka
+
 
 spring:
-  application:
-    name: api-gateway
-  cloud:
+    cloud:
+       gateway:
+          discovery:
+            locator:
+              enabled: true
+          routes:
+            - id: DETAILS
+              uri: lb://DETAILS
+              predicates:
+                - Path=/setup/details/**
+            - id: LIST
+              uri: lb://LIST
+              predicates:
+                - Path=/setup/list/**
+
+# For actuator : url: http://localhost:8076/actuator/gateway/routes
+management:
+  endpoint:
     gateway:
-      routes:
-        - id: details
-          uri: http://localhost:8077/
-          predicates:
-            - Path=/setup/**
-        - id: list
-          uri: http://localhost:8078/
-          predicates:
-            - Path=/setup/**
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: gateway,info
