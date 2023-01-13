@@ -15,8 +15,10 @@ spring:
           routes: #This configurations we can also do in java class as created RouteConfig.java
             - id: DETAILS
               uri: lb://details 
-              predicates: #http://localhost:8076/setup/details/users
-                - Path=/setup/details/**
+              predicates: #http://localhost:8076/test/api/setup/details/users
+                - Path=/test/api/setup/details/**
+              filters:
+                - RewritePath=/test/api(?<segment>.*), $\{segment}
             - id: LIST
               uri: lb://list
               predicates: #http://localhost:8076/setup/list/users
@@ -31,4 +33,4 @@ management:
     web:
       exposure:
         include: gateway,info,health
-    
+
